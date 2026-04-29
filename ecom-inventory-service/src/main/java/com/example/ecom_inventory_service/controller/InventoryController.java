@@ -1,10 +1,8 @@
 package com.example.ecom_inventory_service.controller;
 
+import com.example.ecom_inventory_service.model.Inventory;
 import com.example.ecom_inventory_service.service.InventoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/inventory")
@@ -17,7 +15,17 @@ public class InventoryController {
     }
 
     @GetMapping("/{productId}")
-    public String checkInventory(@PathVariable String productId) {
+    public Inventory checkInventory(@PathVariable Long productId) {
         return inventoryService.checkInventory(productId);
+    }
+
+    @PostMapping()
+    public String addProduct(@RequestBody Inventory inventory) {
+        return inventoryService.addProduct(inventory);
+    }
+
+    @PutMapping()
+    public String updateProduct(@RequestBody Inventory inventory) {
+        return inventoryService.updateProduct(inventory);
     }
 }
