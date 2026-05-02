@@ -1,5 +1,6 @@
 package com.example.ecom_order_service.service;
 
+import com.example.ecom_order_service.client.InventoryClient;
 import com.example.ecom_order_service.dto.Inventory;
 import com.example.ecom_order_service.exceptions.MyCustomRuntimeException;
 import org.jspecify.annotations.Nullable;
@@ -16,10 +17,12 @@ public class OrderService {
 
     private final RestTemplate restTemplate;
     private final RestClient restClient;
+    private final InventoryClient inventoryClient;
 
-    public OrderService(RestTemplate restTemplate, RestClient restClient) {
+    public OrderService(RestTemplate restTemplate, RestClient restClient, InventoryClient inventoryClient) {
         this.restTemplate = restTemplate;
         this.restClient = restClient;
+        this.inventoryClient = inventoryClient;
     }
 
     public String placeOrder(Long productId) {
@@ -40,6 +43,7 @@ public class OrderService {
                 .toEntity(Inventory.class);
         */
 
+        /*
         ResponseEntity<Inventory> entity = restClient.get()
                 .uri("http://localhost:8081/inventory/{productId}", productId)
                 .retrieve()
@@ -47,6 +51,7 @@ public class OrderService {
                     throw new MyCustomRuntimeException(response.getStatusCode(), response.getHeaders());
                 } ))
                 .toEntity(Inventory.class);
+        */
 
         /*
         // here we need to convert Object to Entity
@@ -61,11 +66,12 @@ public class OrderService {
                 }));
          */
 
-        System.out.println(entity.getStatusCode());
+        Inventory inventory = inventoryClient.getInventory(productId);
 
-        updateInventory(entity.getBody());
+        int quantity = inventory.getQuantity();
+        updateInventory(inventory);
 
-        return entity.getBody() != null && entity.getBody().getQuantity() > 0
+        return quantity > 0
                 ? "Order Placed Successfully"
                 : "Out of Stock!!";
     }
@@ -75,10 +81,12 @@ public class OrderService {
         assert inventory != null;
         inventory.setQuantity(inventory.getQuantity() - 1);
 
-        restClient.post()
+        /*restClient.post()
                 .uri("http://localhost:8081/inventory")
                 .body(inventory)
                 .retrieve()
-                .toBodilessEntity();
+                .toBodilessEntity();*/
+
+        inventoryClient.updateInventory(inventory);
     }
 }
