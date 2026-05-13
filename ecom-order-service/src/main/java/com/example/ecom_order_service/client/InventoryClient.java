@@ -17,3 +17,6 @@ public interface InventoryClient {
     @PostMapping("/inventory")
     String updateInventory(@RequestBody Inventory inventory);
 }
+
+
+// TODO: Revice all the concepts
