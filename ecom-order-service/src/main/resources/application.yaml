@@ -2,6 +2,9 @@ spring:
   application:
     name: ecom-order-service
 
+server:
+  port: 8080
+
 logging:
   level:
     com.example.ecom_order_service.client: DEBUG
