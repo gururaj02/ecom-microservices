@@ -16,7 +16,7 @@ spring:
                 - Path=/inventory/**
 
 server:
-  port: 9090
+  port: 9091
 eureka:
   client:
     service-url:
